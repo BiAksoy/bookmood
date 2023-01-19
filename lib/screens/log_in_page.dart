@@ -1,3 +1,4 @@
+import 'package:book_app/provider/google_sign_in_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +21,7 @@ class _LogInState extends State<LogIn> {
   final TextEditingController passwordController = TextEditingController();
   AuthService authService = AuthService();
   String errorMessage = "";
+  final provider = GoogleSignInProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class _LogInState extends State<LogIn> {
                       child: Align(
                         alignment: Alignment.center,
                         child: Text(
-                          "Book App",
+                          "Bookmood",
                           style: GoogleFonts.mogra(
                             textStyle: const TextStyle(
                                 fontSize: 44, fontWeight: FontWeight.bold),
@@ -142,26 +144,30 @@ class _LogInState extends State<LogIn> {
                   width: 250,
                   height: 50,
                   child: ElevatedButton.icon(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      backgroundColor: Colors.amber.shade200,
-                      side: BorderSide(
-                        color: Colors.blueGrey.shade700,
-                        width: 2.5,
-                      ),
-                      elevation: 8,
+                    onPressed: () async {
+                      await provider.googleLogIn().then((value) {
+                        if (provider.user == null) return;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CategoryPage(),
+                          ),
+                        );
+                      });
+                    },
+                    icon: Image.asset(
+                      'images/g-logo.png',
+                      height: 20,
                     ),
-                    icon: Icon(
-                      Icons.login,
-                      color: Colors.blueGrey.shade600,
-                    ),
-                    label: Text(
-                      "Log In With Google",
+                    label: const Text(
+                      'Sign in with Google',
                       style: TextStyle(
-                        color: Colors.blueGrey.shade800,
-                        fontSize: 14,
+                        color: Colors.black,
                       ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: const StadiumBorder(),
                     ),
                   ),
                 ),

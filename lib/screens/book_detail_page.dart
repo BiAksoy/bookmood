@@ -17,6 +17,13 @@ class BookDetail extends StatefulWidget {
 
 class _BookDetailState extends State<BookDetail> {
   final BookProvider bookProvider = BookProvider();
+  late final Future<BookModel> future;
+
+  @override
+  void initState() {
+    future = bookProvider.loadBook(widget.bookData, widget.bookId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +37,7 @@ class _BookDetailState extends State<BookDetail> {
       ),
       backgroundColor: Colors.blueGrey.shade100,
       body: FutureBuilder<BookModel>(
-        future: bookProvider.loadBook(widget.bookData, widget.bookId),
+        future: future,
         builder: (BuildContext context, AsyncSnapshot<BookModel> snapshot) {
           if (snapshot.hasData) {
             return SingleChildScrollView(
@@ -48,7 +55,8 @@ class _BookDetailState extends State<BookDetail> {
                           children: [
                             Card(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0)),
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
                               elevation: 18,
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               child: Image.network(
@@ -81,7 +89,7 @@ class _BookDetailState extends State<BookDetail> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 22),
+                                  const SizedBox(height: 20),
                                   Flexible(
                                     child: Row(
                                       children: [
@@ -95,12 +103,13 @@ class _BookDetailState extends State<BookDetail> {
                                               await launchUrl(url);
                                             },
                                             style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    Colors.blueGrey.shade600,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20.0))),
+                                              backgroundColor:
+                                                  Colors.blueGrey.shade600,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                              ),
+                                            ),
                                             child: Text(
                                               "Buy",
                                               style: GoogleFonts.farsan(
@@ -136,6 +145,14 @@ class _BookDetailState extends State<BookDetail> {
                                                       snapshot.data!);
                                             }
                                           },
+                                        ),
+                                        Text(
+                                          "${snapshot.data!.numFavorites}",
+                                          style: GoogleFonts.ptSans(
+                                            textStyle: const TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),

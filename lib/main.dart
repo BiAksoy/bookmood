@@ -1,5 +1,7 @@
+import 'package:book_app/provider/google_sign_in_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:book_app/service/auth.dart';
 
@@ -9,9 +11,12 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    const MaterialApp(
-      home: AuthStatus(),
-      debugShowCheckedModeBanner: false,
+    ChangeNotifierProvider(
+      create: (context) => GoogleSignInProvider(),
+      child: const MaterialApp(
+        home: AuthStatus(),
+        debugShowCheckedModeBanner: false,
+      ),
     ),
   );
 }

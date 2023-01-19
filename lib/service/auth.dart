@@ -27,7 +27,6 @@ class AuthService {
       'name': name,
       'surname': surname,
       'email': email,
-      'password': password
     });
 
     return user.user;

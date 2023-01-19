@@ -113,12 +113,24 @@ class _FavoritesPageState extends State<FavoritesPage> {
                             IconButton(
                               icon: const Icon(Icons.favorite),
                               color: Colors.redAccent,
-                              onPressed: () => FirebaseFirestore.instance
-                                  .collection('Favorites')
-                                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                                  .collection('Favorites')
-                                  .doc(book.id)
-                                  .delete(),
+                              onPressed: () async {
+                                final docRef = FirebaseFirestore.instance
+                                    .collection(book['bookData'])
+                                    .doc(book['bookId']);
+                                final docSnapshot = await docRef.get();
+                                final int numFavorites =
+                                    docSnapshot.data()!['numFavorites'] as int;
+                                await docRef.update({
+                                  'numFavorites': numFavorites - 1,
+                                });
+
+                                FirebaseFirestore.instance
+                                    .collection('Favorites')
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .collection('Favorites')
+                                    .doc(book.id)
+                                    .delete();
+                              },
                             ),
                           ],
                         ),

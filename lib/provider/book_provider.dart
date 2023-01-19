@@ -17,7 +17,8 @@ class BookProvider with ChangeNotifier {
         (await favoritesCollection.where('bookId', isEqualTo: bookId).get())
             .docs
             .isNotEmpty;
-    return BookModel(bookData, bookId, isFavorited, book);
+    final int numFavorites = book['numFavorites'] as int;
+    return BookModel(bookData, bookId, isFavorited, book, numFavorites);
   }
 
   void addBookToFavorites(BookModel book) {
@@ -27,6 +28,13 @@ class BookProvider with ChangeNotifier {
       'Title': book.book['Title'],
       'Author': book.book['Author'],
       'Picture': book.book['Picture'],
+      'numFavorites': book.numFavorites,
+    });
+    FirebaseFirestore.instance
+        .collection(book.bookData)
+        .doc(book.bookId)
+        .update({
+      'numFavorites': FieldValue.increment(1),
     });
   }
 
@@ -36,7 +44,15 @@ class BookProvider with ChangeNotifier {
         .get()
         .then((QuerySnapshot snapshot) async => {
               for (var document in snapshot.docs)
-                {await favoritesCollection.doc(document.reference.id).delete()}
+                {
+                  await favoritesCollection.doc(document.reference.id).delete(),
+                  await FirebaseFirestore.instance
+                      .collection(book.bookData)
+                      .doc(book.bookId)
+                      .update({
+                    'numFavorites': FieldValue.increment(-1),
+                  })
+                }
             });
   }
 }

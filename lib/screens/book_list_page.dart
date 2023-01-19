@@ -155,9 +155,10 @@ class _BooksState extends State<Books> {
                         child: Text(
                           "See Also",
                           style: GoogleFonts.courgette(
-                              textStyle: const TextStyle(
-                            fontSize: 34,
-                          )),
+                            textStyle: const TextStyle(
+                              fontSize: 34,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -181,18 +182,19 @@ class _BooksState extends State<Books> {
                             return BookCard(
                                 onTap: () {
                                   return Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChangeNotifierProvider(
-                                          create: (BuildContext context) {
-                                            BookProvider();
-                                          },
-                                          child: BookDetail(
-                                              bookData: widget.bookData,
-                                              bookId: document.id),
-                                        ),
-                                      ));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChangeNotifierProvider(
+                                        create: (BuildContext context) {
+                                          BookProvider();
+                                        },
+                                        child: BookDetail(
+                                            bookData: widget.bookData,
+                                            bookId: document.id),
+                                      ),
+                                    ),
+                                  );
                                 },
                                 bookCover: document['Picture']);
                           }).toList(),
